@@ -36,7 +36,12 @@ class Splunk
               when '_time'
                 rres[:"#{field["@k"]}"] = Time.parse field["value"]["text"].to_s 
               else
-                rres[:"#{field["@k"]}"] = field["value"]["text"].to_s
+                if field["value"].instance_of? Array
+                  rres[:"#{field["@k"]}"] = Array.new unless rres[:"#{field["@k"]}"] 
+                  field["value"].each { |value| rres[:"#{field["@k"]}"] << value["text"].to_s }
+                else
+                  rres[:"#{field["@k"]}"] = field["value"]["text"].to_s
+                end
               end
             end
           end
