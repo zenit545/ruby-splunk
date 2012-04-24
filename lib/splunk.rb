@@ -28,6 +28,7 @@ class Splunk
           if field.has_key? "@k"
             case field["@k"]
             when '_raw'
+              # Workaround for splunk returning formatting data in the _raw field - BAD SPLUNK
               rres[:"#{field["@k"]}"] = field["v"].to_s.gsub /<sgh="1">([^<]*)<\/sg>/, '\1'
             when '_si'
               # FIXME do nothing - we don't handle this yet
