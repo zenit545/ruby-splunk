@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name 	= 'ruby-splunk'
-  s.version	= '0.0.2'
+  s.version	= '0.0.3'
   s.date	= '2012-04-24'
   s.summary	= 'Splunk API Library'
   s.description = 'Splunk API Library for Ruby'
