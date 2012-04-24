@@ -28,7 +28,7 @@ class Splunk
           if field.has_key? "@k"
             case field["@k"]
             when '_raw'
-              rres[:"#{field["@k"]}"] = field["v"].to_s
+              rres[:"#{field["@k"]}"] = field["v"].to_s.gsub /<sgh="1">([^<]*)<\/sg>/, '\1'
             when '_si'
               # FIXME do nothing - we don't handle this yet
             else
