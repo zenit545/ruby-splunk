@@ -21,26 +21,28 @@ class Splunk
     xml = Nori.parse api_request("#{@uri}/search/jobs/export", *data).body
     raise "Search failed: #{xml["response"]["messages"]["msg"]}" if xml.has_key? "response"
     ret = Array.new
-    xml["results"]["result"].each do |result|
-      rres = Hash.new
-      result["field"].each do |field|
-        if field.has_key? "@k"
-          case field["@k"]
-          when '_raw'
-            rres[:"#{field["@k"]}"] = field["v"].to_s
-          when '_si'
-            # FIXME do nothing - we don't handle this yet
-          else
+    if xml["results"]["result"] 
+      xml["results"]["result"].each do |result|
+        rres = Hash.new
+        result["field"].each do |field|
+          if field.has_key? "@k"
             case field["@k"]
-            when '_time'
-              rres[:"#{field["@k"]}"] = Time.parse field["value"]["text"].to_s 
+            when '_raw'
+              rres[:"#{field["@k"]}"] = field["v"].to_s
+            when '_si'
+              # FIXME do nothing - we don't handle this yet
             else
-              rres[:"#{field["@k"]}"] = field["value"]["text"].to_s
+              case field["@k"]
+              when '_time'
+                rres[:"#{field["@k"]}"] = Time.parse field["value"]["text"].to_s 
+              else
+                rres[:"#{field["@k"]}"] = field["value"]["text"].to_s
+              end
             end
           end
         end
-      end
       ret << rres
+      end
     end
     ret
   end
